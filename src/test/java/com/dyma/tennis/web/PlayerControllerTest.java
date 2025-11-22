@@ -1,16 +1,17 @@
 package com.dyma.tennis.web;
 
 import com.dyma.tennis.data.PlayerList;
-import com.dyma.tennis.security.SecurityConfiguration;
 import com.dyma.tennis.service.PlayerNotFoundException;
 import com.dyma.tennis.service.PlayerService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,8 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = PlayerController.class)
-@Import(SecurityConfiguration.class)
 @AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
+@ImportAutoConfiguration(exclude = OAuth2ResourceServerAutoConfiguration.class)
 public class PlayerControllerTest {
 
     @Autowired
