@@ -29,7 +29,7 @@ public class PlayerControllerTest {
     private PlayerService playerService;
 
     @Test
-    public void shouldListAllPlayers() throws Exception {
+    public void shouldListAllPlayers() {
         // Given
         when(playerService.getAllPlayers()).thenReturn(PlayerList.ALL);
 
@@ -48,7 +48,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void shouldRetrievePlayer() throws Exception {
+    public void shouldRetrievePlayer() {
         // Given
         UUID playerToRetrieve = UUID.fromString("b466c6f7-52c6-4f25-b00d-c562be41311e");
         Mockito.when(playerService.getByIdentifier(playerToRetrieve)).thenReturn(PlayerList.RAFAEL_NADAL);
@@ -65,7 +65,7 @@ public class PlayerControllerTest {
     }
 
     @Test
-    public void shouldReturn404NotFound_WhenPlayerDoesNotExist() throws Exception {
+    public void shouldReturn404NotFound_WhenPlayerDoesNotExist() {
         // Given
         UUID playerToRetrieve = UUID.fromString("aaaaaaaa-1111-2222-3333-bbbbbbbbbbbb");
         Mockito.when(playerService.getByIdentifier(playerToRetrieve)).thenThrow(new PlayerNotFoundException(playerToRetrieve));
