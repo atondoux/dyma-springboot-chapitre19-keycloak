@@ -8,9 +8,9 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -19,16 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 import java.util.UUID;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestRestTemplate
 public class TournamentControllerEndToEndTest {
-
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -51,9 +48,11 @@ public class TournamentControllerEndToEndTest {
         );
 
         // When
-        String url = "http://localhost:" + port + "/tournaments";
-        HttpEntity<TournamentToCreate> request = new HttpEntity<>(tournamentToCreate);
-        ResponseEntity<Tournament> tournamentResponseEntity = this.restTemplate.exchange(url, HttpMethod.POST, request, Tournament.class);
+        ResponseEntity<Tournament> tournamentResponseEntity = restTemplate.postForEntity(
+                "/tournaments",
+                tournamentToCreate,
+                Tournament.class
+        );
 
         // Then
         Assertions.assertThat(tournamentResponseEntity.getBody().info().name()).isEqualTo("Madrid Master 1000");
@@ -71,9 +70,11 @@ public class TournamentControllerEndToEndTest {
         );
 
         // When
-        String url = "http://localhost:" + port + "/tournaments";
-        HttpEntity<TournamentToCreate> request = new HttpEntity<>(tournamentToCreate);
-        ResponseEntity<Tournament> tournamentResponseEntity = this.restTemplate.exchange(url, HttpMethod.POST, request, Tournament.class);
+        ResponseEntity<Tournament> tournamentResponseEntity = restTemplate.postForEntity(
+                "/tournaments",
+                tournamentToCreate,
+                Tournament.class
+        );
 
         // Then
         Assertions.assertThat(tournamentResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -92,9 +93,13 @@ public class TournamentControllerEndToEndTest {
         );
 
         // When
-        String url = "http://localhost:" + port + "/tournaments";
         HttpEntity<TournamentToUpdate> request = new HttpEntity<>(tournamentToUpdate);
-        ResponseEntity<Tournament> tournamentResponseEntity = this.restTemplate.exchange(url, HttpMethod.PUT, request, Tournament.class);
+        ResponseEntity<Tournament> tournamentResponseEntity = restTemplate.exchange(
+                "/tournaments",
+                HttpMethod.PUT,
+                request,
+                Tournament.class
+        );
 
         // Then
         Assertions.assertThat(tournamentResponseEntity.getBody().info().name()).isEqualTo("Roland Garros");
@@ -103,10 +108,10 @@ public class TournamentControllerEndToEndTest {
     @Test
     public void shouldDeleteTournament() {
         // Given / When
-        String url = "http://localhost:" + port + "/tournaments";
-        this.restTemplate.exchange(url + "/124edf07-64fa-4ea4-a65e-3bfe96df5781", HttpMethod.DELETE, null, Tournament.class);
-        HttpEntity<List<Tournament>> allTournamentsResponseEntity = this.restTemplate.exchange(
-                url,
+        restTemplate.delete("/tournaments/124edf07-64fa-4ea4-a65e-3bfe96df5781");
+
+        ResponseEntity<List<Tournament>> allTournamentsResponseEntity = restTemplate.exchange(
+                "/tournaments",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Tournament>>() {

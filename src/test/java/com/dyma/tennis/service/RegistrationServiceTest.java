@@ -5,10 +5,11 @@ import com.dyma.tennis.data.PlayerRepository;
 import com.dyma.tennis.data.TournamentEntityList;
 import com.dyma.tennis.data.TournamentRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class RegistrationServiceTest {
 
     @Mock
@@ -25,13 +27,8 @@ public class RegistrationServiceTest {
     @Mock
     private TournamentRepository tournamentRepository;
 
+    @InjectMocks
     private RegistrationService registrationService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        registrationService = new RegistrationService(tournamentRepository, playerRepository);
-    }
 
     @Test
     public void shouldRegisterPlayerToTournament() {

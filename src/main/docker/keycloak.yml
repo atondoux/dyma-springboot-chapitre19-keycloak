@@ -1,14 +1,20 @@
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.1
-    command: 'start-dev --import-realm'
-    volumes:
-      - ./keycloak-realm-config:/opt/keycloak/data/import
-      - ./keycloak-data:/opt/keycloak/data/h2
+    command: "start-dev --import-realm"
     environment:
       - KC_DB=dev-file
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_HTTP_PORT=8090
     ports:
-      - 8090:8090
+      - "8090:8090"
+    volumes:
+      - type: bind
+        source: ./keycloak-realm-config
+        target: /opt/keycloak/data/import
+        read_only: true
+      - keycloak_data:/opt/keycloak/data
+
+volumes:
+  dyma_keycloak_data:
