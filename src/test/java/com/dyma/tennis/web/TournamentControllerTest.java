@@ -31,7 +31,7 @@ public class TournamentControllerTest {
     private RegistrationService registrationService;
 
     @Test
-    public void shouldListAllTournaments() throws Exception {
+    public void shouldListAllTournaments() {
         // Given
         Mockito.when(tournamentService.getAllTournaments()).thenReturn(TournamentList.ALL);
 
@@ -50,7 +50,7 @@ public class TournamentControllerTest {
     }
 
     @Test
-    public void shouldRetrieveTournament() throws Exception {
+    public void shouldRetrieveTournament() {
         // Given
         UUID tournamentToRetrieve = UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12");
         Mockito.when(tournamentService.getByIdentifier(tournamentToRetrieve)).thenReturn(TournamentList.FRENCH_OPEN);
@@ -66,7 +66,7 @@ public class TournamentControllerTest {
     }
 
     @Test
-    public void shouldReturn404NotFound_WhenTournamentDoesNotExist() throws Exception {
+    public void shouldReturn404NotFound_WhenTournamentDoesNotExist() {
         // Given
         UUID tournamentToRetrieve = UUID.fromString("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12");
         Mockito.when(tournamentService.getByIdentifier(tournamentToRetrieve)).thenThrow(new TournamentNotFoundException(tournamentToRetrieve));
